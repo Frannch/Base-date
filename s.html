@@ -1,3 +1,6 @@
+<!--6872dc6eb179427992de1629 id-->
+<!--$2a$10$dlcDq7Dl/zLIeuwgLLbzBefyE8zNLNAc8HDbq3Lg3xP/x9JYdCgXS master key-->
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,9 +15,8 @@
     .filtros {
       margin-bottom: 1rem;
     }
-    .filtros input, .filtros select {
+    .filtros select {
       padding: 0.5rem;
-      margin-right: 1rem;
       font-size: 1rem;
     }
     .libros {
@@ -42,8 +44,8 @@
 
   <h1>Lista de libros</h1>
 
+  <!-- 🎯 Filtro -->
   <div class="filtros">
-    <input type="text" id="busqueda" placeholder="Buscar por título o autor...">
     <select id="filtroLeido">
       <option value="todos">Todos</option>
       <option value="si">Leídos</option>
@@ -57,27 +59,19 @@
 
   <script>
     const contenedor = document.getElementById('contenedorLibros');
-    const busquedaInput = document.getElementById('busqueda');
     const filtroLeido = document.getElementById('filtroLeido');
     let librosOriginales = [];
 
-    // 🔁 Función que renderiza los libros según filtros
     function renderizarLibros() {
-      const texto = busquedaInput.value.toLowerCase();
       const filtro = filtroLeido.value;
 
       const filtrados = librosOriginales.filter(libro => {
-        const coincideTexto =
-          libro.Título.toLowerCase().includes(texto) ||
-          libro.Autor.toLowerCase().includes(texto);
-
         const leido = (libro.Leído || "").toLowerCase();
-        const coincideFiltro =
+        return (
           filtro === "todos" ||
           (filtro === "si" && leido === "si") ||
-          (filtro === "no" && leido !== "si");
-
-        return coincideTexto && coincideFiltro;
+          (filtro === "no" && leido !== "si")
+        );
       });
 
       contenedor.innerHTML = "";
@@ -92,15 +86,14 @@
         div.innerHTML = `
           <h3>${libro.Título}</h3>
           <p><strong>Autor:</strong> ${libro.Autor}</p>
-          <p><strong>Editorial:</strong> ${libro.Editorial || "—"}</p>
-          <p><strong>Año:</strong> ${libro.Año || "—"}</p>
+          <p><strong>Editorial:</strong> ${libro.Editorial}</p>
+          <p><strong>Año:</strong> ${libro.Año}</p>
           <p><strong>Leído:</strong> ${libro.Leído}</p>
         `;
         contenedor.appendChild(div);
       });
     }
 
-    // 🔁 Cargar datos desde JSONBin
     fetch("https://api.jsonbin.io/v3/b/6872dc6eb179427992de1629", {
       method: "GET",
       headers: {
@@ -117,8 +110,6 @@
       console.error(err);
     });
 
-    // 🔁 Agregar eventos a los filtros
-    busquedaInput.addEventListener("input", renderizarLibros);
     filtroLeido.addEventListener("change", renderizarLibros);
   </script>
 
