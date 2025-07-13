@@ -7,6 +7,12 @@
   <meta charset="UTF-8">
   <title>Mis libros</title>
   <style>
+    html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
     body {
       font-family: Arial, sans-serif;
       padding: 1rem;
@@ -24,7 +30,7 @@
       padding: 1rem;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      max-height: 500px;
+     
       overflow-y: auto;
     }
     .libro {
@@ -38,6 +44,20 @@
     .libro p {
       margin: 0.25rem 0;
     }
+    #marcar{
+      background-color: #4CAF50; /* Verde */
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    @media (max-width: 768px) {
+  .libros {
+    min-height: 80vh; /* 80% de la altura de la pantalla */
+  }
+}
+
   </style>
 </head>
 <body>
@@ -142,7 +162,7 @@
         <p><strong>Editorial:</strong> ${libro.Editorial}</p>
         <p><strong>Año:</strong> ${libro.Año}</p>
         <p><strong>Leído:</strong> ${libro.Leído}</p>
-        ${libro.Leído.toLowerCase() !== "si" ? `<button onclick="marcarComoLeido(${index})">Marcar como leído</button>` : ""}
+        ${libro.Leído.toLowerCase() !== "si" ? `<button id="marcar" onclick="marcarComoLeido(${index})">Marcar como leído</button>` : ""}
       `;
       contenedor.appendChild(div);
     });
