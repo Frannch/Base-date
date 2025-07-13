@@ -111,7 +111,101 @@
     });
 
     filtroLeido.addEventListener("change", renderizarLibros);
-  </script>
+
+    
+  
+
+  function renderizarLibros() {
+    const filtro = filtroLeido.value;
+
+    const filtrados = librosOriginales.filter(libro => {
+      const leido = (libro.Leído || "").toLowerCase();
+      return (
+        filtro === "todos" ||
+        (filtro === "si" && leido === "si") ||
+        (filtro === "no" && leido !== "si")
+      );
+    });
+
+    contenedor.innerHTML = "";
+    if (filtrados.length === 0) {
+      contenedor.innerHTML = "<p>No se encontraron libros.</p>";
+      return;
+    }
+
+    filtrados.forEach((libro, index) => {
+      const div = document.createElement('div');
+      div.className = 'libro';
+      div.innerHTML = `
+        <h3>${libro.Título}</h3>
+        <p><strong>Autor:</strong> ${libro.Autor}</p>
+        <p><strong>Editorial:</strong> ${libro.Editorial}</p>
+        <p><strong>Año:</strong> ${libro.Año}</p>
+        <p><strong>Leído:</strong> ${libro.Leído}</p>
+        ${libro.Leído.toLowerCase() !== "si" ? `<button onclick="marcarComoLeido(${index})">Marcar como leído</button>` : ""}
+      `;
+      contenedor.appendChild(div);
+    });
+  }
+
+  function marcarComoLeido(indiceMostrado) {
+    // Buscar el libro correcto dentro del filtro actual
+    const filtro = filtroLeido.value;
+    const filtrados = librosOriginales.filter(libro => {
+      const leido = (libro.Leído || "").toLowerCase();
+      return (
+        filtro === "todos" ||
+        (filtro === "si" && leido === "si") ||
+        (filtro === "no" && leido !== "si")
+      );
+    });
+
+    const libroSeleccionado = filtrados[indiceMostrado];
+
+    // Encontrar su índice real en la lista original
+    const indexOriginal = librosOriginales.findIndex(libro => libro.Título === libroSeleccionado.Título && libro.Autor === libroSeleccionado.Autor);
+
+    // Marcar como leído
+    librosOriginales[indexOriginal].Leído = "Si";
+
+    // Guardar en jsonbin.io (PUT)
+    fetch("https://api.jsonbin.io/v3/b/6872dc6eb179427992de1629", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Master-Key": "$2a$10$dlcDq7Dl/zLIeuwgLLbzBefyE8zNLNAc8HDbq3Lg3xP/x9JYdCgXS"
+      },
+      body: JSON.stringify(librosOriginales)
+    })
+    .then(res => res.json())
+    .then(() => {
+      renderizarLibros(); // Actualizar la vista
+    })
+    .catch(err => {
+      alert("Ocurrió un error al guardar el cambio.");
+      console.error(err);
+    });
+  }
+
+  // Obtener datos al cargar
+  fetch("https://api.jsonbin.io/v3/b/6872dc6eb179427992de1629", {
+    method: "GET",
+    headers: {
+      "X-Master-Key": "$2a$10$dlcDq7Dl/zLIeuwgLLbzBefyE8zNLNAc8HDbq3Lg3xP/x9JYdCgXS"
+    }
+  })
+  .then(res => res.json())
+  .then(data => {
+    librosOriginales = data.record;
+    renderizarLibros();
+  })
+  .catch(err => {
+    contenedor.innerHTML = "Error al cargar los datos.";
+    console.error(err);
+  });
+
+  filtroLeido.addEventListener("change", renderizarLibros);
+</script>
 
 </body>
 </html>
