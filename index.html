@@ -5,21 +5,34 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Mis libros</title>
+  <title >Mis libros</title>
   <style>
     html, body {
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   height: 100%;
   margin: 0;
   padding: 0;
+  baclkground-color: #c7c4c4;
 }
 
-    body {
-      font-family: Arial, sans-serif;
-      padding: 1rem;
-      background: #f8f8f8;
-    }
+  #filtroLeido{
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  }
+  #titulo {
+    
+    text-align: center;
+    
+  }
+  body {
+    font-family: Arial, sans-serif;
+    padding: 1rem;
+    background: #f8f8f8;
+  }
     .filtros {
       margin-bottom: 1rem;
+      
     }
     .filtros select {
       padding: 0.5rem;
@@ -62,7 +75,7 @@
 </head>
 <body>
 
-  <h1>Lista de libros</h1>
+  <h1 id="titulo">✨Lista de Libros✨</h1>
 
   <!-- 🎯 Filtro -->
   <div class="filtros">
